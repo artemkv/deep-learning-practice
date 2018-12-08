@@ -104,4 +104,17 @@ public class MatrixTest {
         assertEquals(4.1F, matrix.getValue(1, 0), "value 1,0");
         assertEquals(5.1F, matrix.getValue(1, 1), "value 1,1");
     }
+
+    @Test
+    public void testSerialize() {
+        Matrix matrix = new Matrix(3, 3, new MatrixInitializer() {
+            public float getValue(int row, int column) {
+                return column * 10 + row;
+            }
+        });
+
+        assertEquals(
+            "0,000000;10,000000;20,000000;1,000000;11,000000;21,000000;2,000000;12,000000;22,000000",
+            matrix.serialize(), "serialize");
+    }
 }

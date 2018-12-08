@@ -1,5 +1,13 @@
 package net.artemkv.ai.deeplearning;
 
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.util.Scanner;
+
 public final class NeuralNetwork {
     private static final float LEARNING_RATE = 0.1F;
 
@@ -40,6 +48,47 @@ public final class NeuralNetwork {
         weights = new Matrix[depth];
 
         initialize();
+    }
+
+    public NeuralNetwork(InputStream stream) {
+        Scanner scanner = new Scanner(stream).useDelimiter(";|\\r\\n|\\r|\\n");
+        int depth = scanner.nextInt();
+        int inputWidth = scanner.nextInt();
+        int hiddenWidth = scanner.nextInt();
+        int outputWidth = scanner.nextInt();
+
+        if (depth < 2) {
+            throw new IllegalArgumentException(
+                "at least 1 hidden layer and 1 output layer is required");
+        }
+        if (inputWidth <= 0) {
+            throw new IllegalArgumentException("inputWidth");
+        }
+        if (hiddenWidth <= 0) {
+            throw new IllegalArgumentException("hiddenWidth");
+        }
+        if (outputWidth <= 0) {
+            throw new IllegalArgumentException("outputWidth");
+        }
+
+        this.depth = depth;
+        this.inputWidth = inputWidth;
+        this.hiddenWidth = hiddenWidth;
+        this.outputWidth = outputWidth;
+
+        weights = new Matrix[depth];
+        for (int i = 0; i < depth; i++) {
+            if (i == 0) {
+                MatrixInitializer initializer = new ScannerMatrixInitializer(scanner);
+                weights[i] = new Matrix(hiddenWidth, inputWidth, initializer);
+            } else if (i == depth - 1) {
+                MatrixInitializer initializer = new ScannerMatrixInitializer(scanner);
+                weights[i] = new Matrix(outputWidth, hiddenWidth, initializer);
+            } else {
+                MatrixInitializer initializer = new ScannerMatrixInitializer(scanner);
+                weights[i] = new Matrix(hiddenWidth, hiddenWidth, initializer);
+            }
+        }
     }
 
     private void initialize() {
@@ -139,5 +188,17 @@ public final class NeuralNetwork {
             layerInput = layerOutput;
         }
         return layerOutput;
+    }
+
+    public void save(String fileName) throws IOException {
+        try(Writer writer = new BufferedWriter(
+            new OutputStreamWriter(
+                new FileOutputStream(fileName)))) {
+            writer.write(String.format("%d;%d;%d;%d%n", depth, inputWidth, hiddenWidth, outputWidth));
+            for (int i = 0; i < depth; i++) {
+                writer.write(weights[i].serialize());
+                writer.write(String.format("%n"));
+            }
+        }
     }
 }

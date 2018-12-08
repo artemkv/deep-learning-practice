@@ -104,6 +104,17 @@ class Matrix {
         }
     }
 
+    public String serialize() {
+        StringBuilder sb = new StringBuilder();
+        for (int row = 0; row < rows; row++) {
+            for (int column = 0; column < columns; column++) {
+                sb.append(String.format("%f;", matrix[row][column]));
+            }
+        }
+        sb.setLength(sb.length() - 1);
+        return sb.toString();
+    }
+
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int row = 0; row < rows; row++) {
