@@ -9,21 +9,21 @@ import java.util.Scanner;
 public class Program {
     public static void main(String[] args) {
         //trainAndSave();
-        loadAndTest();
+        //loadAndTest();
     }
 
     private static void trainAndSave() {
         NeuralNetwork nn = new NeuralNetwork(2, 28 * 28, 100, 10);
-        train(nn, "/mnist_train.csv");
+        train(nn, "/mnist_train_100.csv");
         try {
-            nn.save("mnist.nn");
+            nn.save("mnist_100.nn");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private static void loadAndTest() {
-        InputStream stream = Program.class.getResourceAsStream("/mnist.nn");
+        InputStream stream = Program.class.getResourceAsStream("/mnist_100.nn");
         NeuralNetwork nn = new NeuralNetwork(stream);
         test(nn, "/mnist_test_10.csv");
     }
