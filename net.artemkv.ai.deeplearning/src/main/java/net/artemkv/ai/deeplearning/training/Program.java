@@ -10,20 +10,51 @@ public class Program {
     public static void main(String[] args) {
         //trainAndSave();
         //loadAndTest();
+        classifyMyImages();
+    }
+
+    private static void classifyMyImages() {
+        InputStream stream = Program.class.getResourceAsStream("/mnist.nn");
+        NeuralNetwork nn = new NeuralNetwork(stream);
+        try {
+            classifyMyImage(nn, "/mysamples/0.png");
+            classifyMyImage(nn, "/mysamples/1.png");
+            classifyMyImage(nn, "/mysamples/2.png");
+            classifyMyImage(nn, "/mysamples/3.png");
+            classifyMyImage(nn, "/mysamples/4.png");
+            classifyMyImage(nn, "/mysamples/5.png");
+            classifyMyImage(nn, "/mysamples/6.png");
+            classifyMyImage(nn, "/mysamples/7.png");
+            classifyMyImage(nn, "/mysamples/8.png");
+            classifyMyImage(nn, "/mysamples/9.png");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static void classifyMyImage(NeuralNetwork nn, String fileName) throws IOException {
+        InputStream stream = Program.class.getResourceAsStream(fileName);
+        int[] data = ImageLoader.getData(stream);
+
+        TrainingInput input = new TrainingInput(new SensorInput(data), 0);
+        float[] result = nn.classify(input.getScaledInput());
+        System.out.println(fileName + " classified as " + getLabel(result));
     }
 
     private static void trainAndSave() {
         NeuralNetwork nn = new NeuralNetwork(2, 28 * 28, 100, 10);
         train(nn, "/mnist_train_100.csv");
+        // train(nn, "/mnist_train.csv");
+        // train(nn, "/mnist_train.csv");
         try {
-            nn.save("mnist_100.nn");
+            nn.save("mnist.nn");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private static void loadAndTest() {
-        InputStream stream = Program.class.getResourceAsStream("/mnist_100.nn");
+        InputStream stream = Program.class.getResourceAsStream("/mnist.nn");
         NeuralNetwork nn = new NeuralNetwork(stream);
         test(nn, "/mnist_test_10.csv");
     }
@@ -108,6 +139,20 @@ public class Program {
             }
         }
         return actualValue == expectedValue;
+    }
+
+    private static int getLabel(float[] actual) {
+        int actualValue = 0;
+        float actualMax = actual[0];
+
+        for (int i = 0; i < actual.length; i++) {
+            if (actual[i] > actualMax) {
+                actualMax = actual[i];
+                actualValue = i;
+            }
+        }
+
+        return actualValue;
     }
 
     public static void test() {
