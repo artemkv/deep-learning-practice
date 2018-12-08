@@ -13,10 +13,10 @@ public class Program {
     }
 
     private static void trainAndSave() {
-        NeuralNetwork nn = new NeuralNetwork(3, 28 * 28, 100, 10);
-        train(nn, "/mnist_train_100.csv");
+        NeuralNetwork nn = new NeuralNetwork(2, 28 * 28, 100, 10);
+        train(nn, "/mnist_train.csv");
         try {
-            nn.save("mnist_100.nn");
+            nn.save("mnist.nn");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -25,7 +25,7 @@ public class Program {
     private static void loadAndTest() {
         InputStream stream = Program.class.getResourceAsStream("/mnist.nn");
         NeuralNetwork nn = new NeuralNetwork(stream);
-        test(nn, "/mnist_test.csv");
+        test(nn, "/mnist_test_10.csv");
     }
 
     private static void train(NeuralNetwork nn, String fileName) {
