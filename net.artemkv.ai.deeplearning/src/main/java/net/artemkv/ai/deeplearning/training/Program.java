@@ -60,5 +60,7 @@ public class Program {
 
         // Predict
         float[] resultAfterTrainingA1 = nn.classify(inputA1);
+
+        System.out.println(resultAfterTrainingA1[0] + ", " + resultAfterTrainingA1[1]);
     }
 }
