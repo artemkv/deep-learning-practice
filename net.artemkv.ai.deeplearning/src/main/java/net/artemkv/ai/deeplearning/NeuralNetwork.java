@@ -114,7 +114,7 @@ public final class NeuralNetwork {
         return getOutput(input);
     }
 
-    public void train(float[] input, float[] expectedOutput) {
+    public float[] train(float[] input, float[] expectedOutput) {
         if (input.length != inputWidth) {
             throw new IllegalArgumentException(
                 String.format("expected input of length %d", inputWidth));
@@ -172,6 +172,8 @@ public final class NeuralNetwork {
             // Propagate errors
             errors = propagatedErrors;
         }
+
+        return layerOutput;
     }
 
     private float[] getOutput(float[] input) {

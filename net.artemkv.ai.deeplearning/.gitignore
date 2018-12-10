@@ -3,3 +3,6 @@
 *.iws
 
 target/
+
+src/main/resources/mnist_train.csv
+src/main/resources/mnist_test.csv
