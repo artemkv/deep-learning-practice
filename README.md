@@ -7,12 +7,15 @@
 **Results**
 
 Network with **1** hidden layer of **30** neurons took **3** epochs to train
+
 Correct: **9406** out of **10000**
 
 Network with **2** hidden layer of **30** neurons took **5** epochs to train
+
 Correct: **9041** out of **10000**
 
 Training with **1** hidden layer of **100** neurons took **3** epochs to train
+
 Correct: **9639** out of **10000**
 
 **Conclusions**
